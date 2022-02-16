@@ -1,26 +1,31 @@
 import constant
 import math
-#import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 
 class cl_math:
-    gc_text_enter_equation="Введите уравнение"
-    gc_cmd_linear_equation="Линейное уравнение"
-    gc_cmd_quadratic_equation="Квадратное уравнение"
-    
-    def normalize(self, iv_equation):
-        """ Перенос левой части уравнения в правую """
-        lt_fb=iv_equation.split("=")
-        lv_result=lt_fb[0]
-        if lt_fb[1]!='-':
-            lt_fb[1]="+"+lt_fb[1]
-        for lv_i in lt_fb[1]:
-            if lv_i=="-":
-                lv_i="+"
-            else:
-                if lv_i=="+":
-                    lv_i='-'
-            lv_result+=lv_i
+    mv_debug = 0
+    def switch_debug(self):
+        if self.mv_debug == 0:
+            self.mv_debug = 1
+        else:
+            self.mv_debug = 0
+        return self.mv_debug
+    def switch_debug9(self):
+        if self.mv_debug == 0:
+            self.mv_debug = 9
+        else:
+            self.mv_debug = 0
+        return self.mv_debug
+    def dprint(self, iv_output):
+        if self.mv_debug > 0:
+            print( iv_output )
+    def dprint9(self, iv_output):
+        if self.mv_debug == 9:
+            print( iv_output )
 
+    def replace_in(self, iv_equation):
+        lv_result = iv_equation
+        self.dprint9("replace_in 1:"+lv_result)
         lv_result=lv_result.replace("х","x")
         lv_result=lv_result.replace("²","**2")
         lv_result=lv_result.replace("³","**3")
@@ -47,9 +52,26 @@ class cl_math:
         
         lv_result=lv_result.replace("degrees","math.degrees")
         lv_result=lv_result.replace("radians","math.radians")
-
-        #print("normalize:",lv_result)
+        self.dprint9("replace_in exit:"+lv_result)
         return lv_result
+
+    
+    def normalize(self, iv_equation):
+        """ Перенос левой части уравнения в правую """
+        lt_fb=iv_equation.split("=")
+        lv_result=lt_fb[0]
+        if lt_fb[1]!='-':
+            lt_fb[1]="+"+lt_fb[1]
+        for lv_i in lt_fb[1]:
+            if lv_i=="-":
+                lv_i="+"
+            else:
+                if lv_i=="+":
+                    lv_i='-'
+            lv_result+=lv_i
+
+        self.dprint("normalize:",lv_result)
+        return self.replace_in(lv_result)
 
     def calculate(self, iv_equation, iv_value):
         """ Вычисление """
@@ -90,7 +112,7 @@ class cl_math:
         lv_response=""
         if iv_min == iv_max:
             return constant.gc_error_in_range
-        # print("main 1", iv_equation, iv_min, iv_max)
+        #print("main 1", iv_equation, iv_min, iv_max)
         try:
             lv_min = float(iv_min)
         except:
@@ -100,7 +122,7 @@ class cl_math:
             lv_max = float(iv_max)
         except:
             return constant.gc_error_in_num+iv_max
-        # print("main 2", iv_equation, lv_min, lv_max)
+        #print("main 2", iv_equation, lv_min, lv_max)
         try:
             self.calculate( lv_equation, lv_min)
             self.calculate( lv_equation, lv_max)
@@ -121,14 +143,61 @@ class cl_math:
             lv_response = constant.gc_error_equation
         return lv_response
         
-    def graph(self,iv_equation, iv_min, iv_max):
-        lv_x = -iv_min
-        lv_step = (iv_max-iv_min)/constant.gc_graph_count
-        while lv_x <= iv_max:
-            lv_y = self.calculate(iv_equation, lv_x)
+    def tab(self, iv_equation, iv_min, iv_max):
+        self.dprint("table equation:" + iv_equation + " min:"+iv_min+ " max:"+iv_max)
+        lv_equation = self.replace_in(iv_equation)
+        self.dprint("table equation:" + lv_equation )
+        try:
+            lv_min = float(iv_min)
+        except:
+            return constant.gc_error_in_num+iv_min
+
+        try:
+            lv_max = float(iv_max)
+        except:
+            return constant.gc_error_in_num+iv_max
+        if lv_min > lv_max:
+            lv_min, lv_max = lv_max, lv_min
+        self.dprint9("table 1 equation:" + lv_equation + " min:"+str(lv_min)+ " max:"+str(lv_max))
+        lv_x = lv_min
+        self.dprint9("table 1.1 equation:" + lv_equation + " min:"+str(lv_min)+ " max:"+str(lv_max)+" tab_count:"+str(constant.gc_tab_count))
+        lv_step = (lv_max-lv_min)/constant.gc_tab_count
+        self.dprint("table equation:" + lv_equation + " x:"+str(lv_x)+ "step:"+str(lv_step))
+        lv_response = ""
+        while lv_x <= lv_max:
+            lv_y = self.calculate(lv_equation, lv_x)
+            self.dprint9("tab:"+ lv_equation + " x:"+ str(lv_x) + " y:" + str( lv_y ))
+            lv_response = lv_response + str( lv_x ) + "," + str( lv_y ) + "\n"
+            lv_x += lv_step
+        return lv_response
+        
+    def graph(self, iv_equation, iv_min, iv_max):
+        self.dprint("graph equation:" + iv_equation + " min:"+iv_min+ "max:"+iv_max)
+        lv_equation = self.replace_in(iv_equation.lower())
+        self.dprint("graph 1 equation:"+ lv_equation)
+        try:
+            lv_min = float(iv_min)
+        except:
+            return constant.gc_error_in_num+iv_min
+
+        try:
+            lv_max = float(iv_max)
+        except:
+            return constant.gc_error_in_num+iv_max
+        if lv_min > lv_max:
+            lv_min, lv_max = lv_max, lv_min
+        lv_x = float(iv_min)
+        lv_step = (lv_max-lv_min)/constant.gc_graph_count
+
+        self.dprint("tab 2 equation:"+ lv_equation + " min:"+ str(lv_min) + " max:" + str(lv_max) + " step :" + str(lv_step))
+        # print("graph 2", lv_step)
+        while lv_x <= lv_max:
+            lv_y = self.calculate(lv_equation, lv_x)
+            self.dprint9("graph2 ["+ str(lv_x) + ","+ str(lv_y)+"]")
             plt.scatter(lv_x,lv_y)
             lv_x += lv_step
+            self.dprint9("graph3 ["+ str(lv_x) + ","+ str(lv_y)+"]")
 
-        plt.savefig('saved_figure.png')
+        plt.savefig(constant.gc_graph_file_name)
         plt.clf()
-        return 'saved_figure.png'
+        return constant.gc_graph_file_name
