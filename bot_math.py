@@ -20,18 +20,20 @@ def start(message):
         go_db.add_user(message.from_user.id, message.from_user.first_name)
 
     print("start:"+message.from_user.first_name)
-    keyboard = telebot.types.ReplyKeyboardMarkup(True)
-    keyboard.row(go_math.gc_cmd_linear_equation, go_math.gc_cmd_quadratic_equation)
+    #keyboard = telebot.types.ReplyKeyboardMarkup(True)
+    #keyboard.row(go_math.gc_cmd_linear_equation, go_math.gc_cmd_quadratic_equation)
     go_bot.reply_to(message, constant.gc_welcome)#, reply_markup=keyboard)
 
+# Handle '/debug1'
 @go_bot.message_handler(commands=['debug1'])
 def debug(message):
         go_bot.reply_to(message, go_math.switch_debug())
+# Handle '/debug9'
 @go_bot.message_handler(commands=['debug9'])
 def debug(message):
         go_bot.reply_to(message, go_math.switch_debug9())
 
-
+# main
 @go_bot.message_handler(func=lambda message: True)
 def main(message):
     lv_text = message.text.lower()
