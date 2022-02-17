@@ -37,16 +37,18 @@ def debug(message):
 @go_bot.message_handler(func=lambda message: True)
 def main(message):
     lv_text = message.text.lower()
+    print(message.from_user.first_name)
     try:
         lt_text = lv_text.split(';')
         if lv_text.find("=") > 0:
-            print("=")
+            print(constant.gc_msg_equation,lv_text)
             lv_x = go_math.main( "", lt_text[0], lt_text[1], lt_text[2])
-            lv_response = "Уравнение " + lt_text[0] + "\n от " + lt_text[1] + " до " + lt_text[2] + "\n Найден ответ:" + str(lv_x)
+            lv_response = constant.gc_msg_equation + lt_text[0] + "\n" + constant.gc_msg_range + lt_text[1] + ".." + lt_text[2] + "\n" + constant.gc_msg_response + str(lv_x)
             go_bot.reply_to( message, lv_response )
             return
         else:
-            print("y=")
+            # Если нет =, то вывести таблицу значений и построить график
+            print(constant.gc_msg_graphic,lv_text)
             lv_tab=go_math.tab(lt_text[0], lt_text[1], lt_text[2])
             go_bot.reply_to( message, lv_tab )
             lv_graphic=go_math.graph(lt_text[0], lt_text[1], lt_text[2])

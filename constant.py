@@ -3,6 +3,10 @@ gc_error_equation = "Ошибка при вычислении функции"
 gc_error_select_other_range = "Ошибка. выберите другой диапазон"
 gc_error_in_range = "Ошибка в диапазоне"
 gc_error_in_num = "Ошибка в числе:"
+gc_msg_equation = "Уравнение:"
+gc_msg_range = "Диапазон:"
+gc_msg_response = "Ответ:"
+gc_msg_graphic = "График:"
 
 gc_welcome = """\
 Привет! Я математик.

@@ -23,6 +23,8 @@ class cl_math:
         if self.mv_debug == 9:
             print( iv_output )
 
+    def round(self, iv_x):
+        return str( math.ceil(iv_x*constant.gc_ceil)/constant.gc_ceil )
     def replace_in(self, iv_equation):
         lv_result = iv_equation
         self.dprint9("replace_in 1:"+lv_result)
@@ -94,7 +96,7 @@ class cl_math:
             lv_x = lv_new
         else:
             return constant.gc_error_select_other_range
-        return math.ceil(lv_x*constant.gc_ceil)/constant.gc_ceil
+        return self.round(lv_x)
     
     def linear_equation(self, iv_equation):
         """ Линейное уравнение """
@@ -167,7 +169,7 @@ class cl_math:
         while lv_x <= lv_max:
             lv_y = self.calculate(lv_equation, lv_x)
             self.dprint9("tab:"+ lv_equation + " x:"+ str(lv_x) + " y:" + str( lv_y ))
-            lv_response = lv_response + str( lv_x ) + "," + str( lv_y ) + "\n"
+            lv_response = lv_response + self.round( lv_x ) + "," + self.round( lv_y ) + "\n"
             lv_x += lv_step
         return lv_response
         
