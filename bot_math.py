@@ -7,7 +7,7 @@ from db import cl_db
 from class_math import cl_math
 
 go_bot = telebot.TeleBot(config.API_TOKEN)
-go_db = cl_db("bot_math.db") 
+go_db = cl_db(constant.gc_db_name) 
 go_math = cl_math()
 
 gv_cmd = ""

@@ -26,6 +26,7 @@ gc_tab_count = 20
 gc_accuracy = 0.0000001
 gc_ceil = 10000
 gc_graph_file_name = '/tmp/saved_figure.png'
+gc_db_name = '/db/bot_math.db'
 
 gc_sqrt = "√"
 gc_square = "²"
