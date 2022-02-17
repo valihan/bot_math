@@ -1,12 +1,13 @@
 import sqlite3
 
+
 class cl_db:
 
     def __init__(self, db_file):
         self.conn = sqlite3.connect(db_file, check_same_thread=False)
         self.cursor = self.conn.cursor()
 
-    def user_exists(self, iv_user_id ):
+    def user_exists(self, iv_user_id):
         """Проверяем, есть ли юзер в базе"""
         result = self.cursor.execute("SELECT `id` FROM `users` WHERE `user_id` = ?", (iv_user_id,))
         return bool(len(result.fetchall()))
